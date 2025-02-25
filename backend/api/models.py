@@ -182,24 +182,24 @@ class Rapport(models.Model):
     ]
 
     utilisateur = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL,  # Au lieu de User
         on_delete=models.CASCADE, 
         related_name='rapports'
-    )  # L'utilisateur qui génère le rapport
+    )
     type_rapport = models.CharField(
         max_length=50, 
         choices=TYPE_RAPPORT_CHOICES
-    )  # Le type de rapport
-    date_creation = models.DateTimeField(auto_now_add=True)  # Date de création du rapport
+    )
+    date_creation = models.DateTimeField(auto_now_add=True)
     contenu = models.TextField(
         help_text="Détails ou description du rapport."
-    )  # Contenu du rapport (description ou données)
+    )
     fichier_pdf = models.FileField(
         upload_to="rapports_pdfs/", 
         null=True, 
         blank=True, 
         help_text="Fichier PDF généré pour le rapport."
-    )  # PDF généré
+    )
 
     def __str__(self):
         return f"Rapport {self.type_rapport} - {self.utilisateur.username} ({self.date_creation})"
@@ -296,7 +296,7 @@ class Alert(models.Model):
     ]
 
     produit = models.ForeignKey(
-        ProduitPharmaceutique, 
+        'ProduitPharmaceutique', 
         on_delete=models.CASCADE, 
         related_name="alerts"
     )
@@ -304,20 +304,19 @@ class Alert(models.Model):
         max_length=50, 
         choices=TYPE_ALERT_CHOICES
     )
-    message = models.TextField()  # Description de l'alerte
+    message = models.TextField()
     date_creation = models.DateTimeField(auto_now_add=True)
     utilisateur = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL,  # Au lieu de User
         on_delete=models.CASCADE, 
         null=True, 
         blank=True,
         related_name="alerts"
-    )  # L'utilisateur concerné par l'alerte (optionnel)
-    statut = models.BooleanField(default=False)  # Indique si l'alerte est résolue
+    )
+    statut = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Alerte : {self.type_alert} - {self.produit.nom} ({'Résolue' if self.statut else 'Non résolue'})"
-
 
 class Commande(models.Model):
     fournisseur = models.CharField(max_length=255, default='Ministère')  # Ajout du champ fournisseur

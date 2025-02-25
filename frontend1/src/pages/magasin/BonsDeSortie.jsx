@@ -10,7 +10,7 @@ import {
   MapPin,
   Calendar,
   PlusCircle,
-  Filter
+  Printer,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,7 +33,7 @@ const BonsDeSortie = () => {
     setShowDetailsModal(true);
     setEditMode(false);
   };
-  
+
   const loadBonsDeSortie = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/bons_sortie/");
@@ -51,6 +51,7 @@ const BonsDeSortie = () => {
       console.error("Erreur lors du chargement des produits :", error);
     }
   };
+
   const handleAddBon = async () => {
     try {
       const payload = {
@@ -142,7 +143,6 @@ const BonsDeSortie = () => {
     }
   };
 
-
   const filteredBonsDeSortie = bonsDeSortie.filter(bon => {
     const matchesSearch = 
       bon.numero.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -168,6 +168,14 @@ const BonsDeSortie = () => {
     loadProduits();
   }, []);
 
+  const handlePrint = () => {
+    const printContent = document.getElementById("print-section").innerHTML;
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload();
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen p-8">
@@ -194,70 +202,10 @@ const BonsDeSortie = () => {
           </button>
         </div>
 
-        {/* Stats Cards (garder la partie existante) */}
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-gray-100">
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Total Bons</p>
-                <p className="text-2xl font-bold text-blue-600">{bonsDeSortie.length}</p>
-              </div>
-              <Package className="text-blue-600" size={24} />
-            </div>
-          </div>
-
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Total Produits</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {bonsDeSortie.reduce(
-                    (total, bon) =>
-                      total +
-                      bon.produits.reduce((somme, produit) => somme + produit.quantite, 0),
-                    0
-                  )}
-                </p>
-              </div>
-              <TrendingUp className="text-green-600" size={24} />
-            </div>
-          </div>
-
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Destinations Uniques</p>
-                <p className="text-2xl font-bold text-yellow-600">
-                  {new Set(bonsDeSortie.map((bon) => bon.destination)).size}
-                </p>
-              </div>
-              <MapPin className="text-yellow-600" size={24} />
-            </div>
-          </div>
-
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Dernier Bon</p>
-                <p className="text-lg font-bold text-red-600">
-                  {/*bonsDeSortie.length > 0
-                    ? new Date(
-                        Math.max(...bonsDeSortie.map((bon) => new Date(bon.date_Sortie)))
-                      ).toLocaleDateString()
-                    : "Aucun" */}
-                    13/02/2025
-                </p>
-              </div>
-              <Calendar className="text-red-600" size={24} />
-            </div>
-          </div>
-        </div>
-
         {/* Search et Filtres */}
         <div className="p-6 bg-gray-100 border-b">
-          <div className="flex flex-col space-y-4">
-            <div className="relative">
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-3 text-gray-400" size={18} />
               <input
                 type="text"
@@ -267,7 +215,7 @@ const BonsDeSortie = () => {
               />
             </div>
             
-            <div className="flex gap-4">
+            <div className="flex gap-4 mt-4 md:mt-0">
               <select
                 className="p-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                 value={filterType}
@@ -297,7 +245,6 @@ const BonsDeSortie = () => {
           </div>
         </div>
 
-        {/* Table (garder la partie existante avec filteredBonsDeSortie) */}
         {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -306,7 +253,6 @@ const BonsDeSortie = () => {
                 <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro du Bon</th>
                 <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de Sortie</th>
                 <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destination</th>
-                <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -316,29 +262,10 @@ const BonsDeSortie = () => {
                   bon.destination.toLowerCase().includes(searchTerm.toLowerCase())
                 )
                 .map((bon) => (
-                  <tr key={bon.id} className="hover:bg-gray-50 transition border-b">
+                  <tr key={bon.id} className="hover:bg-gray-50 transition border-b" onClick={() => showDetails(bon)}>
                     <td className="p-4">{bon.numero}</td>
                     <td className="p-4">{new Date(bon.date_sortie).toLocaleDateString()}</td>
                     <td className="p-4">{bon.destination}</td>
-                    <td className="p-4">
-                      <div className="flex space-x-2">
-                        <button 
-                          onClick={() => showDetails(bon)}
-                          className="text-blue-600 hover:bg-blue-100 p-2 rounded-full transition"
-                        >
-                          <Edit2 size={18} />
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setSelectedBon(bon);
-                            handleDeleteBon();
-                          }}
-                          className="text-red-600 hover:bg-red-100 p-2 rounded-full transition"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </td>
                   </tr>
               ))}
             </tbody>
@@ -356,7 +283,7 @@ const BonsDeSortie = () => {
               onClick={() => setShowDetailsModal(false)}
             >
               <motion.div
-                className="bg-white rounded-2xl shadow-2xl w-96 p-8"
+                className="bg-white rounded-2xl shadow-2xl w-[600px] p-8"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
@@ -377,7 +304,7 @@ const BonsDeSortie = () => {
                   />
 
                   {(editMode || !selectedBon) && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 max-h-48 overflow-y-auto">
                       {newBon.produits.map((produit, index) => (
                         <div key={index} className="flex space-x-2">
                           <select
@@ -424,20 +351,20 @@ const BonsDeSortie = () => {
                   )}
 
                   {!editMode && selectedBon && (
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto">
                       <h3 className="font-semibold mb-2">Produits</h3>
                       <table className="w-full">
                         <thead>
                           <tr>
-                            <th className="text-left text-sm text-gray-600">Produit</th>
-                            <th className="text-right text-sm text-gray-600">Quantité</th>
+                            <th className="text-center text-sm text-gray-600">Produit</th>
+                            <th className="text-center text-sm text-gray-600">Quantité</th>
                           </tr>
                         </thead>
                         <tbody>
                           {selectedBon.produits.map((p, index) => (
                             <tr key={index}>
-                              <td className="py-1">{p.produit_nom}</td>
-                              <td className="text-right">{p.quantite}</td>
+                              <td className="py-1 text-center">{p.produit_nom}</td>
+                              <td className="text-center">{p.quantite}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -468,6 +395,12 @@ const BonsDeSortie = () => {
                           >
                             Supprimer
                           </button>
+                          <button
+                            className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition"
+                            onClick={handlePrint}
+                          >
+                            <Printer size={18} /> Imprimer
+                          </button>
                         </>
                       )
                     ) : (
@@ -479,6 +412,31 @@ const BonsDeSortie = () => {
                       </button>
                     )}
                   </div>
+                </div>
+
+                {/* Print Section */}
+                <div id="print-section" style={{ display: "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
+                    <img src="C:/Users/UNRULY/Downloads/LOGO.jpg" alt="Logo" style={{ width: "50px", marginRight: "10px" }} />
+                    <h1 style={{ fontWeight: "bold", textAlign: "center" }}>Bons de Sortie</h1>
+                  </div>
+                  <h2 style={{ textAlign: "center" }}>Produits</h2>
+                  <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
+                    <thead>
+                      <tr style={{ backgroundColor: "#f2f2f2" }}>
+                        <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>Produit</th>
+                        <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>Quantité</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedBon?.produits.map((p, index) => (
+                        <tr key={index}>
+                          <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>{p.produit_nom}</td>
+                          <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>{p.quantite}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </motion.div>
             </motion.div>

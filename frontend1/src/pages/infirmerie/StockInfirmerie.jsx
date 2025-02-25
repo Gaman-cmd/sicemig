@@ -52,7 +52,6 @@ const StockInfirmerie = () => {
             <tr className="bg-gray-100">
               <th className="p-3 border text-left">Produit</th>
               <th className="p-3 border text-left">Quantité Disponible</th>
-              <th className="p-3 border text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -71,14 +70,14 @@ const StockInfirmerie = () => {
                     item.quantite_disponible
                   )}
                 </td>
-                <td className="p-3 border">
+{ /*               <td className="p-3 border">
                   <button
                     onClick={() => setEditStock(editStock === item.id ? null : item.id)}
                     className="text-blue-600"
                   >
                     {editStock === item.id ? "Enregistrer" : "Modifier"}
                   </button>
-                </td>
+                </td>      */ }
               </tr>
             ))}
           </tbody>

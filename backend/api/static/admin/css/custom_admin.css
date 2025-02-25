@@ -1,0 +1,51 @@
+/* Style général */
+:root {
+    --primary: #2563eb;
+    --secondary: #3b82f6;
+    --accent: #1d4ed8;
+}
+
+/* En-tête */
+#header {
+    background: var(--primary);
+    color: white;
+}
+
+/* Menu latéral */
+.module h2, .module caption {
+    background: var(--primary);
+}
+
+/* Boutons */
+.submit-row input {
+    background: var(--primary);
+}
+
+.submit-row input:hover {
+    background: var(--accent);
+}
+
+/* Tableaux */
+thead th {
+    background: var(--primary);
+    color: white;
+}
+
+/* Formulaires */
+.form-row {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Messages */
+.success {
+    background: #10B981;
+}
+
+.warning {
+    background: #F59E0B;
+}
+
+.error {
+    background: #EF4444;
+}

@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 
-// 🔥 Importation des pages
+// Importation des pages
 import Accueil from "../magasin/Accueil";
 import Produits from "../magasin/Produits";
 import Commandes from "../magasin/Commandes";
 import BonsDeSortie from "../magasin/BonsDeSortie";
 import Rapports from "../magasin/Rapports";
-import Parametres from "../magasin/Parametres";
+//import Parametres from "../magasin/Parametres";
 
 import {
   Package,
@@ -50,7 +50,7 @@ const DashboardMagasin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex">
+    <div className="min-h-screen flex">
       {/* Sidebar with auto-open on hover */}
       <motion.div 
         initial={{ width: 80 }}
@@ -133,13 +133,14 @@ const DashboardMagasin = () => {
         </div>
 
         {/* Dynamic Content */}
-        <div className="p-6">
+        <div className="p-6 h-full overflow-y-auto">
           <motion.div
             key={currentPage}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
+            className="h-full"
           >
             {renderContent()}
           </motion.div>

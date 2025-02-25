@@ -30,7 +30,7 @@ import {
 const DashboardInfirmerie = () => {
   const { logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState("tableau-de-bord");
+  const [currentPage, setCurrentPage] = useState("dashboard");
   const [showAlertPopup, setShowAlertPopup] = useState(false);
   const [alertCount, setAlertCount] = useState(0);
   const [alerts, setAlerts] = useState([]);

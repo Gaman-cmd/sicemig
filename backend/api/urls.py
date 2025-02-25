@@ -11,6 +11,7 @@ from .views import AlertListCreateAPIView, AlertUpdateAPIView
 from .views import ConsultationDetailAPIView
 from .views import LoginAPIView
 from .views import MagasinierStatsView
+from .views import admin_dashboard
 from api.views import BonSortieCRUD
 from .views import RapportPDFAPIView
 from .views import AlerteStockListAPIView
@@ -40,7 +41,7 @@ urlpatterns = [
     path('stock_infirmerie/', StockInfirmerieListAPIView.as_view(), name='stock-infirmerie-list'),
     path('stock_infirmerie/modifier/<int:produit__id>/', ModifierStockInfirmerieAPIView.as_view(), name='modifier-stock-infirmerie'),
     path('alertes/', AlerteStockListAPIView.as_view(), name='alertes-list'),
-
+    path('admins/dashboards/', admin_dashboard, name='admin-dashboard'),
 ]
 
 

@@ -647,3 +647,35 @@ from .serializers import AlerteStockSerializer
 class AlerteStockListAPIView(generics.ListAPIView):
     queryset = AlerteStock.objects.all().order_by('-date_alerte')
     serializer_class = AlerteStockSerializer
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+from django.db.models import Count, Sum
+from django.utils import timezone
+from datetime import timedelta
+
+@staff_member_required
+def admin_dashboard(request):
+    # Statistiques des utilisateurs
+    user_stats = Utilisateur.objects.values('role').annotate(count=Count('id'))
+    
+    # Statistiques des stocks
+    stock_critique = ProduitPharmaceutique.objects.filter(quantite_en_stock__lte=10).count()
+    
+    # Alertes récentes
+    alertes_recentes = AlerteStock.objects.filter(
+        date_alerte__gte=timezone.now() - timedelta(days=7)
+    ).order_by('-date_alerte')[:5]
+    
+    # Activité récente
+    activite_recente = Rapport.objects.all().order_by('-date_creation')[:10]
+    
+    context = {
+        'user_stats': user_stats,
+        'stock_critique': stock_critique,
+        'alertes_recentes': alertes_recentes,
+        'activite_recente': activite_recente,
+    }
+    
+    return render(request, 'admin/dashboard.html', context)

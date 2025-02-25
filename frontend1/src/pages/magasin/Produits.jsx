@@ -1,4 +1,4 @@
-//Produits.jsx
+// Produits.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { 
@@ -19,7 +19,7 @@ const Produits = () => {
   const [selectedFilter, setSelectedFilter] = useState("TOUS");
   const [selectedProduit, setSelectedProduit] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [newProduit, setNewProduit] = useState({ nom: "", quantite_en_stock: "", date_peremption: "" });
+  const [newProduit, setNewProduit] = useState({ nom: "", numero_lot: "", quantite_en_stock: 0, unite: "plaquette", quantite_par_carton: 1, date_peremption: "" });
 
   useEffect(() => {
     loadProduits();
@@ -39,26 +39,26 @@ const Produits = () => {
       alert("Le nom du produit est obligatoire !");
       return;
     }
-  
+
     if (newProduit.quantite_en_stock < 0) {
       alert("La quantité ne peut pas être négative !");
       return;
     }
-  
+
     if (!newProduit.date_peremption) {
       alert("Veuillez entrer une date de péremption !");
       return;
     }
-  
+
     try {
       if (selectedProduit) {
         await axios.put(`http://127.0.0.1:8000/api/produits/${selectedProduit.id}/`, newProduit);
       } else {
         await axios.post("http://127.0.0.1:8000/api/produits/", newProduit);
       }
-  
+
       setShowModal(false);
-      setNewProduit({ nom: "", quantite_en_stock: 0, date_peremption: "" });
+      setNewProduit({ nom: "", numero_lot: "", quantite_en_stock: 0, unite: "plaquette", quantite_par_carton: 1, date_peremption: "" });
       setSelectedProduit(null);
       loadProduits();
     } catch (error) {
@@ -110,7 +110,7 @@ const Produits = () => {
   });
 
   return (
-    <div className="bg-gray-50 min-h-screen p-8">
+    
       <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 flex justify-between items-center">
@@ -157,7 +157,7 @@ const Produits = () => {
           <table className="w-full">
             <thead className="bg-gray-100 border-b">
               <tr>
-                {["Nom", "Quantité en stock", "Date de péremption", "Statut", "Actions"].map((header) => (
+                {["Nom", "Numéro de lot", "Quantité en stock", "Unité", "Date de péremption", "Statut"].map((header) => (
                   <th key={header} className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {header}
                   </th>
@@ -170,35 +170,22 @@ const Produits = () => {
                 .map((produit) => {
                   const statut = getStatutStock(produit);
                   return (
-                    <tr key={produit.id} className="hover:bg-gray-50 transition border-b">
+                    <tr 
+                      key={produit.id} 
+                      className="hover:bg-gray-50 transition border-b"
+                      onClick={() => { setSelectedProduit(produit); setNewProduit(produit); setShowModal(true); }}
+                    >
                       <td className="p-4">{produit.nom}</td>
+                      <td className="p-4">{produit.numero_lot}</td>
                       <td className="p-4">{produit.quantite_en_stock}</td>
+                      <td className="p-4">{produit.unite}</td>
+                     {/* { <td className="p-4">{produit.quantite_par_carton}</td>  */}
                       <td className="p-4">{produit.date_peremption}</td>
                       <td className="p-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${statut.colorClass} inline-flex items-center space-x-1`}>
                           {statut.icon}
                           <span>{statut.label}</span>
                         </span>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex space-x-2">
-                          <button 
-                            onClick={() => {
-                              setSelectedProduit(produit);
-                              setNewProduit({ ...produit });
-                              setShowModal(true);
-                            }} 
-                            className="text-blue-600 hover:bg-blue-100 p-2 rounded-full transition"
-                          >
-                            <Edit2 size={18} />
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(produit.id)} 
-                            className="text-red-600 hover:bg-red-100 p-2 rounded-full transition"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
                       </td>
                     </tr>
                   );
@@ -207,7 +194,7 @@ const Produits = () => {
           </table>
         </div>
 
-        {/* Modal (same as before, with some style updates) */}
+        {/* Modal */}
         <AnimatePresence>
           {showModal && (
             <motion.div
@@ -225,7 +212,7 @@ const Produits = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-2xl font-bold mb-6 text-center">
-                  {selectedProduit ? "Modifier le produit" : "Ajouter un produit"}
+                  {selectedProduit ? "Détails du produit" : "Ajouter un produit"}
                 </h2>
 
                 <div className="space-y-4">
@@ -236,7 +223,13 @@ const Produits = () => {
                     value={newProduit.nom}
                     onChange={(e) => setNewProduit({ ...newProduit, nom: e.target.value })}
                   />
-
+                  <input
+                    type="text"
+                    placeholder="Numéro de lot"
+                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    value={newProduit.numero_lot}
+                    onChange={(e) => setNewProduit({ ...newProduit, numero_lot: e.target.value })}
+                  />
                   <input
                     type="number"
                     placeholder="Quantité en stock"
@@ -244,7 +237,21 @@ const Produits = () => {
                     value={newProduit.quantite_en_stock}
                     onChange={(e) => setNewProduit({ ...newProduit, quantite_en_stock: e.target.value })}
                   />
-
+                  <select
+                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    value={newProduit.unite}
+                    onChange={(e) => setNewProduit({ ...newProduit, unite: e.target.value })}
+                  >
+                    <option value="carton">Carton</option>
+                    <option value="plaquette">Plaquette</option>
+                  </select>
+                  <input
+                    type="number"
+                    placeholder="Quantité par carton"
+                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    value={newProduit.quantite_par_carton}
+                    onChange={(e) => setNewProduit({ ...newProduit, quantite_par_carton: e.target.value })}
+                  />
                   <input
                     type="date"
                     className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -252,19 +259,36 @@ const Produits = () => {
                     onChange={(e) => setNewProduit({ ...newProduit, date_peremption: e.target.value })}
                   />
 
-                  <button 
-                    className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                    onClick={handleSave}
-                  >
-                    {selectedProduit ? "Modifier" : "Ajouter"}
-                  </button>
+                  {selectedProduit ? (
+                    <div>
+                      <button 
+                        className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                        onClick={handleSave}
+                      >
+                        Modifier
+                      </button>
+                      <button 
+                        className="w-full mt-2 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                        onClick={() => handleDelete(selectedProduit.id)}
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                      onClick={handleSave}
+                    >
+                      Ajouter
+                    </button>
+                  )}
                 </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </div>
+    
   );
 };
 

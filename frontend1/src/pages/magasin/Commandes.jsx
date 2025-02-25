@@ -136,7 +136,7 @@ const Commandes = () => {
   });
 
   return (
-    <div className="bg-gray-50 min-h-screen p-8">
+    
       <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 flex justify-between items-center">
@@ -340,7 +340,7 @@ const Commandes = () => {
               >
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold">
-                  {editMode ? "Modifier la commande" : "Nouvelle Commande"}
+                    {editMode ? "Modifier la commande" : "Nouvelle Commande"}
                   </h2>
                   <button
                     onClick={() => setShowModal(false)}
@@ -405,13 +405,10 @@ const Commandes = () => {
                     {newCommande.produits.length === 0 ? (
                       <p className="text-sm text-gray-500">Aucun produit sélectionné</p>
                     ) : (
-                      <div className="space-y-2">
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
                         {newCommande.produits.map((item, index) => {
                           const produitId = Number(item.produit);
                           const produitDetails = produits.find(p => p.id === produitId);
-                          if (!produitDetails) {
-                            console.warn(`Produit introuvable pour l'ID: ${produitId}`);
-                          }
                           return (
                             <div key={`${produitId}-${index}`} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                               <span className="text-sm font-medium">
@@ -473,7 +470,7 @@ const Commandes = () => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+   
   );
 };
 

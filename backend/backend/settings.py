@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django_filters',
 ]
 
+AUTH_USER_MODEL = 'api.Utilisateur'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -52,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -73,6 +76,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+ADMIN_SITE_HEADER = "SICEMIG Administration"
+ADMIN_SITE_TITLE = "SICEMIG Admin"
+ADMIN_INDEX_TITLE = "Tableau de bord administrateur"
 
 
 # Database
@@ -108,12 +114,26 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+#TIME_ZONE = 'UTC'
 
+#USE_I18N = True
+
+#USE_TZ = True
+# Définition de la langue en français
+LANGUAGE_CODE = 'fr-fr'
+
+# Définition du fuseau horaire (optionnel, mais recommandé)
+TIME_ZONE = 'Africa/Douala'  # ou votre fuseau horaire
+
+# Activation de l'internationalisation
 USE_I18N = True
 
+# Activation de la localisation
+USE_L10N = True
+
+# Activation du support des fuseaux horaires
 USE_TZ = True
 
 
