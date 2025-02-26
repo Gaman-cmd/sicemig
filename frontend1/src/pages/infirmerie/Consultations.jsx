@@ -6,6 +6,8 @@ const Consultations = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  const [searchMaladie, setSearchMaladie] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentConsultation, setCurrentConsultation] = useState(null);
@@ -143,7 +145,9 @@ const Consultations = () => {
 
   const filteredConsultations = consultations.filter(
     (consultation) =>
-      consultation.patientNom.toLowerCase().includes(search.toLowerCase())
+      consultation.patientNom.toLowerCase().includes(search.toLowerCase()) &&
+      consultation.maladie.toLowerCase().includes(searchMaladie.toLowerCase()) &&
+      (!dateFilter || consultation.date_consultation.startsWith(dateFilter))
   );
 
   return (
@@ -151,13 +155,19 @@ const Consultations = () => {
       <h2 className="text-xl font-bold mb-4">Liste des Consultations</h2>
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
-      <div className="mb-4 flex justify-between">
+      <div className="mb-4 flex flex-col md:flex-row justify-between space-y-2 md:space-y-0">
         <input
           type="text"
-          placeholder="Rechercher une consultation..."
-          className="border p-2 rounded w-full"
+          placeholder="Rechercher par patient ou maladie..."
+          className="border p-1 rounded w-full md:w-1/3"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border p-1 rounded w-full md:w-1/3"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
         />
         <button
           onClick={() => {
@@ -170,7 +180,7 @@ const Consultations = () => {
             setEditMode(true);
             setModalVisible(true);
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md ml-4"
+          className="bg-blue-600 text-white px-2 py-1 rounded-md ml-4"
         >
           + Consultation
         </button>

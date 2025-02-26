@@ -50,15 +50,15 @@ const StockInfirmerie = () => {
         <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-100">
-              <th className="p-3 border text-left">Produit</th>
-              <th className="p-3 border text-left">Quantité Disponible</th>
+              <th className="p-3 border text-center">Produit</th>
+              <th className="p-3 border text-center">Quantité Disponible</th>
             </tr>
           </thead>
           <tbody>
             {stock.map((item) => (
               <tr key={item.id}>
-                <td className="p-3 border">{item.produit_nom}</td>
-                <td className="p-3 border">
+                <td className="p-3 border text-center">{item.produit_nom}</td>
+                <td className="p-3 border text-center">
                   {editStock === item.id ? (
                     <input
                       type="number"
@@ -70,14 +70,6 @@ const StockInfirmerie = () => {
                     item.quantite_disponible
                   )}
                 </td>
-{ /*               <td className="p-3 border">
-                  <button
-                    onClick={() => setEditStock(editStock === item.id ? null : item.id)}
-                    className="text-blue-600"
-                  >
-                    {editStock === item.id ? "Enregistrer" : "Modifier"}
-                  </button>
-                </td>      */ }
               </tr>
             ))}
           </tbody>

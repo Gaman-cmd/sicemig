@@ -42,9 +42,9 @@ const Dashboard = () => {
     return acc;
   }, {});
 
-  const consultationsPerDiagnosis = consultations.reduce((acc, consultation) => {
-    const diagnosis = consultation.diagnostic;
-    acc[diagnosis] = (acc[diagnosis] || 0) + 1;
+  const consultationsPerMaladie = consultations.reduce((acc, consultation) => {
+    const maladie = consultation.maladie;
+    acc[maladie] = (acc[maladie] || 0) + 1;
     return acc;
   }, {});
 
@@ -81,12 +81,12 @@ const Dashboard = () => {
     ],
   };
 
-  const consultationsDiagnosisData = {
-    labels: Object.keys(consultationsPerDiagnosis),
+  const consultationsMaladieData = {
+    labels: Object.keys(consultationsPerMaladie),
     datasets: [
       {
-        label: 'Consultations par diagnostic',
-        data: Object.values(consultationsPerDiagnosis),
+        label: 'Consultations par maladie',
+        data: Object.values(consultationsPerMaladie),
         backgroundColor: [
           'rgba(255, 99, 132, 0.6)',
           'rgba(54, 162, 235, 0.6)',
@@ -101,7 +101,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 bg-white shadow rounded-lg">
-     {/* <h2 className="text-2xl font-bold mb-4">Tableau de Bord</h2> */ }
+      {/* <h2 className="text-2xl font-bold mb-4">Tableau de Bord</h2> */}
 
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
@@ -122,12 +122,8 @@ const Dashboard = () => {
             <Doughnut data={alertesData} />
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold mb-4">Consultations par Diagnostic</h3>
-            <Pie data={consultationsDiagnosisData} />
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold mb-4">Nombre de Patients</h3>
-            <p className="text-4xl font-bold">{patients.length}</p>
+            <h3 className="text-lg font-bold mb-4">Consultations par Maladie</h3>
+            <Pie data={consultationsMaladieData} />
           </div>
         </div>
       )}

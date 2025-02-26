@@ -178,7 +178,6 @@ const BonsDeSortie = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen p-8">
       <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
         {/* Header avec bouton d'ajout */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 flex justify-between items-center">
@@ -416,11 +415,11 @@ const BonsDeSortie = () => {
 
                 {/* Print Section */}
                 <div id="print-section" style={{ display: "none" }}>
+                <img src="LOGO.jpg" alt="Logo" style={{ width: "50px", marginRight: "10px" }} />
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
-                    <img src="C:/Users/UNRULY/Downloads/LOGO.jpg" alt="Logo" style={{ width: "50px", marginRight: "10px" }} />
-                    <h1 style={{ fontWeight: "bold", textAlign: "center" }}>Bons de Sortie</h1>
+                    
+                    <h1 style={{ fontWeight: "bold", textAlign: "center" }}>Bon de Sortie</h1>
                   </div>
-                  <h2 style={{ textAlign: "center" }}>Produits</h2>
                   <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
                     <thead>
                       <tr style={{ backgroundColor: "#f2f2f2" }}>
@@ -443,7 +442,7 @@ const BonsDeSortie = () => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    
   );
 };
 
