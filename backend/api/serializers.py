@@ -4,6 +4,10 @@ from .models import (
     ProduitPharmaceutique, BonSortie, Consultation, Patient, Prescription, 
     Rapport, Alert, Commande, CommandeProduit, BonSortieProduit, Utilisateur, AlerteStock
 )
+class UtilisateurSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Utilisateur
+        fields = ['id', 'username', 'email', 'role']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

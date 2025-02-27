@@ -679,3 +679,19 @@ def admin_dashboard(request):
     }
     
     return render(request, 'admin/dashboard.html', context)
+
+from rest_framework import viewsets
+from .models import Utilisateur, ProduitPharmaceutique, Consultation
+from .serializers import UtilisateurSerializer, ProduitPharmaceutiqueSerializer, ConsultationSerializer
+
+class UtilisateurViewSet(viewsets.ModelViewSet):
+    queryset = Utilisateur.objects.all()
+    serializer_class = UtilisateurSerializer
+
+class ProduitPharmaceutiqueViewSet(viewsets.ModelViewSet):
+    queryset = ProduitPharmaceutique.objects.all()
+    serializer_class = ProduitPharmaceutiqueSerializer
+
+class ConsultationViewSet(viewsets.ModelViewSet):
+    queryset = Consultation.objects.all()
+    serializer_class = ConsultationSerializer    

@@ -1,5 +1,5 @@
 #urls.py
-from django.urls import path
+from django.urls import path, include
 from .views import test_api
 from .views import ProduitPharmaceutiqueListCreate, ProduitPharmaceutiqueDetail
 from .views import BonSortieListCreate
@@ -18,7 +18,15 @@ from .views import AlerteStockListAPIView
 from .views import PatientListCreateAPIView, PatientDetailAPIView
 from .views import CommandeListCreateAPIView, CommandeDetailAPIView
 from api.views import StockInfirmerieListAPIView, ModifierStockInfirmerieAPIView
+from rest_framework.routers import DefaultRouter
+from .views import UtilisateurViewSet, ProduitPharmaceutiqueViewSet, ConsultationViewSet
+
+router = DefaultRouter()
+router.register(r'users', UtilisateurViewSet)
+router.register(r'produits', ProduitPharmaceutiqueViewSet)
+router.register(r'consultations', ConsultationViewSet)
 urlpatterns = [
+    path('', include(router.urls)),
     path("auth/login/", LoginAPIView.as_view(), name="login"),
     path('test/', test_api),
     path('commandes/', CommandeListCreateAPIView.as_view(), name='commande-list-create'),
