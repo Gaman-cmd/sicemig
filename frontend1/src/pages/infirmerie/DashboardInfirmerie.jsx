@@ -19,8 +19,6 @@ import {
   Users,
   Stethoscope,
   Package,
-  FileText,
-  Settings,
   LogOut,
   Bell,
   User,
@@ -70,8 +68,6 @@ const DashboardInfirmerie = () => {
     { name: "Consultations", id: "consultations", icon: Stethoscope },
     { name: "Stock Infirmerie", id: "stock", icon: Package },
     { name: "Alertes Stock", id: "alert", icon: AlertTriangle },
-    { name: "Rapports", id: "rapports", icon: FileText },
-    { name: "Paramètres", id: "parametres", icon: Settings }
   ];
 
   const renderContent = () => {

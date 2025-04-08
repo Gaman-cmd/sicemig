@@ -40,7 +40,6 @@ const StockInfirmerie = () => {
 
   return (
     <div className="p-6 bg-white shadow rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Stock Infirmerie</h2>
 
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
